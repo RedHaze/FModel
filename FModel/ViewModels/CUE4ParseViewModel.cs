@@ -294,7 +294,7 @@ public class CUE4ParseViewModel : ViewModel
             if (Provider.MountedVfs.FirstOrDefault(x => x.Name == file.Name) is not { } vfs)
             {
                 if (Provider.UnloadedVfs.FirstOrDefault(x => x.Name == file.Name) is IoStoreReader store)
-                    file.FileCount = (int) store.Info.TocEntryCount - 1;
+                    file.FileCount = (int) store.TocResource.Header.TocEntryCount - 1;
 
                 continue;
             }

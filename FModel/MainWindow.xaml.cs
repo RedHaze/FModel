@@ -85,10 +85,11 @@ public partial class MainWindow
 #if DEBUG
         await _threadWorkerView.Begin(cancellationToken =>
             _applicationView.CUE4Parse.Extract(cancellationToken,
-                "fortnitegame/Content/Characters/Player/Female/Medium/Bodies/F_Med_Soldier_01/Meshes/F_Med_Soldier_01.uasset"));
-        await _threadWorkerView.Begin(cancellationToken =>
+                "FortniteGame/Plugins/GameFeatures/BRCosmetics/Content/Characters/Player/Male/Large/Bodies/M_LRG_Tactical_Bear/Meshes/Parts/M_LRG_Tactical_Bear_FaceAcc_AnimBP.uasset"));
+
+        /*await _threadWorkerView.Begin(cancellationToken =>
             _applicationView.CUE4Parse.Extract(cancellationToken,
-                "fortnitegame/Content/Animation/Game/MainPlayer/Emotes/Cowbell/Cowbell_CMM_Loop_M.uasset"));
+                "fortnitegame/Content/Animation/Game/MainPlayer/Emotes/Cowbell/Cowbell_CMM_Loop_M.uasset"));*/
 #endif
     }
 
