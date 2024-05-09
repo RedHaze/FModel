@@ -83,9 +83,23 @@ public partial class MainWindow
         ).ConfigureAwait(false);
 
 #if DEBUG
-        // await _threadWorkerView.Begin(cancellationToken =>
-        //     _applicationView.CUE4Parse.Extract(cancellationToken,
-        //         "FortniteGame/Content/Environments/Asteria/Props/Coastal/Coastal_Boat_B/Meshes/SM_Coastal_Boat_B.uasset"));
+        /*
+        await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "FortniteGame/Content/Characters/Player/Male/Medium/Heads/M_MED_FeralTrash_Head/Meshes/M_MED_FeralTrash_Head_PoseAsset.uasset"));
+        */
+
+        /*await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "FortniteGame/Content/ArtTools/Pose_Asset_Remaps/ARKit_Remap_PoseAsset.uasset"));*/
+
+        await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "fortnitegame/Content/Characters/Player/Male/Medium/Heads/M_MED_Jonesy3L_Head/Meshes/M_MED_Jonesy3L_Head.uasset"));
+
+        /*await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "fortnitegame/Content/Animation/Game/MainPlayer/Emotes/Cowbell/Cowbell_CMM_Loop_M.uasset"));*/
 #endif
     }
 
