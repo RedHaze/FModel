@@ -83,9 +83,19 @@ public partial class MainWindow
         ).ConfigureAwait(false);
 
 #if DEBUG
+        /*
         await _threadWorkerView.Begin(cancellationToken =>
             _applicationView.CUE4Parse.Extract(cancellationToken,
-                "FortniteGame/Plugins/GameFeatures/BRCosmetics/Content/Characters/Player/Male/Large/Bodies/M_LRG_Tactical_Bear/Meshes/Parts/M_LRG_Tactical_Bear_FaceAcc_AnimBP.uasset"));
+                "FortniteGame/Content/Characters/Player/Male/Medium/Heads/M_MED_FeralTrash_Head/Meshes/M_MED_FeralTrash_Head_PoseAsset.uasset"));
+        */
+
+        /*await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "FortniteGame/Content/ArtTools/Pose_Asset_Remaps/ARKit_Remap_PoseAsset.uasset"));*/
+
+        await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "fortnitegame/Content/Characters/Player/Male/Medium/Heads/M_MED_Jonesy3L_Head/Meshes/M_MED_Jonesy3L_Head.uasset"));
 
         /*await _threadWorkerView.Begin(cancellationToken =>
             _applicationView.CUE4Parse.Extract(cancellationToken,
