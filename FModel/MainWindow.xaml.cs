@@ -93,9 +93,34 @@ public partial class MainWindow
             _applicationView.CUE4Parse.Extract(cancellationToken,
                 "FortniteGame/Content/ArtTools/Pose_Asset_Remaps/ARKit_Remap_PoseAsset.uasset"));*/
 
+
+        
         await _threadWorkerView.Begin(cancellationToken =>
             _applicationView.CUE4Parse.Extract(cancellationToken,
-                "fortnitegame/Content/Characters/Player/Male/Medium/Heads/M_MED_Jonesy3L_Head/Meshes/M_MED_Jonesy3L_Head.uasset"));
+                "FortniteGame/Content/Characters/Player/Male/Medium/Heads/M_MED_Jonesy3L_Head/Meshes/M_MED_Jonesy3L_Head.uasset"));
+        
+
+        /*
+        await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "FortniteGame/Content/Characters/Player/Common/Fortnite_Base_Head/Facials/CurveMappings/FN_LegacyTo3L_Main_Mapping.uasset"));
+
+        await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "FortniteGame/Content/Characters/Player/Common/Fortnite_Base_Head/Facials/CurveMappings/FN_3LToLegacy_Main_Mapping.uasset"));
+        */
+
+        /*
+        await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "FortniteGame/Content/Characters/Player/Male/Medium/Heads/M_MED_Jonesy3L_Head/Meshes/3L/3L_lod2_Facial_Poses_PoseAsset.uasset"));
+        */
+
+        /*
+        await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "FortniteGame/Content/Characters/Player/Common/Fortnite_Base_Head/Fortnite_Base_3L_Head_Skeleton.uasset"));
+        */
 
         /*await _threadWorkerView.Begin(cancellationToken =>
             _applicationView.CUE4Parse.Extract(cancellationToken,
