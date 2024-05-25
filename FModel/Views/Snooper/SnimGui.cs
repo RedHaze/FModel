@@ -217,7 +217,9 @@ public class SnimGui
         {
             Layout("Animate With Rotation Only");ImGui.PushID(1);
             ImGui.Checkbox("", ref s.Renderer.AnimateWithRotationOnly);
-            ImGui.PopID();Layout("Vertex Colors");ImGui.PushID(2);
+            ImGui.PopID();Layout("Time Multiplier");ImGui.PushID(2);
+            ImGui.DragInt("", ref s.Renderer.Options.Tracker.TimeMultiplier, 0.1f, 1, 8, "x%i", ImGuiSliderFlags.NoInput);
+            ImGui.PopID();Layout("Vertex Colors");ImGui.PushID(3);
             var c = (int) s.Renderer.Color;
             ImGui.Combo("vertex_colors", ref c,
                 "Default\0Sections\0Colors\0Normals\0Texture Coordinates\0");
@@ -412,9 +414,11 @@ Snooper aims to give an accurate preview of models, materials, skeletal animatio
                     ImGui.TableNextColumn();
                     ImGui.Text(model.UvCount.ToString("D"));
                     ImGui.TableNextColumn();
-                    if (ImGui.Selectable(model.Name, s.Renderer.Options.SelectedModel == guid, ImGuiSelectableFlags.SpanAllColumns))
+                    var doubleClick = false;
+                    if (ImGui.Selectable(model.Name, s.Renderer.Options.SelectedModel == guid, ImGuiSelectableFlags.SpanAllColumns | ImGuiSelectableFlags.AllowDoubleClick))
                     {
                         s.Renderer.Options.SelectModel(guid);
+                        doubleClick = ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left);
                     }
                     Popup(() =>
                     {
@@ -454,16 +458,17 @@ Snooper aims to give an accurate preview of models, materials, skeletal animatio
                             s.Renderer.IsSkeletonTreeOpen = true;
                             ImGui.SetWindowFocus("Skeleton Tree");
                         }
-                        if (ImGui.MenuItem("Teleport To"))
-                        {
-                            s.Renderer.CameraOp.Teleport(model.GetTransform().Matrix.Translation, model.Box);
-                        }
+                        doubleClick = ImGui.MenuItem("Teleport To");
 
                         if (ImGui.MenuItem("Delete")) s.Renderer.Options.RemoveModel(guid);
                         if (ImGui.MenuItem("Deselect")) s.Renderer.Options.SelectModel(Guid.Empty);
                         ImGui.Separator();
                         if (ImGui.MenuItem("Copy Path to Clipboard")) ImGui.SetClipboardText(model.Path);
                     });
+                    if (doubleClick)
+                    {
+                        s.Renderer.CameraOp.Teleport(model.GetTransform().Matrix.Translation, model.Box);
+                    }
 
                     ImGui.TableNextColumn();
                     ImGui.Image(s.Renderer.Options.Icons[model.Attachments.Icon].GetPointer(), new Vector2(_tableWidth));

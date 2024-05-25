@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-
 using AdonisUI.Controls;
 using CUE4Parse.Compression;
 using CUE4Parse.Encryption.Aes;
@@ -34,16 +33,15 @@ using CUE4Parse.UE4.Readers;
 using CUE4Parse.UE4.Shaders;
 using CUE4Parse.UE4.Versions;
 using CUE4Parse.UE4.Wwise;
-
 using CUE4Parse_Conversion;
-using CUE4Parse_Conversion.Animations;
-using CUE4Parse_Conversion.Meshes;
 using CUE4Parse_Conversion.Sounds;
-
 using CUE4Parse.GameTypes.UDWN.Encryption.Aes;
 using CUE4Parse.GameTypes.DBD.Encryption.Aes;
+using CUE4Parse.GameTypes.DreamStar.Encryption.Aes;
+using CUE4Parse.GameTypes.PAXDEI.Encryption.Aes;
+using CUE4Parse.GameTypes.NetEase.MAR.Encryption.Aes;
+using CUE4Parse.GameTypes.FSR.Encryption.Aes;
 using EpicManifestParser;
-
 using FModel.Creator;
 using FModel.Extensions;
 using FModel.Framework;
@@ -52,20 +50,13 @@ using FModel.Settings;
 using FModel.Views;
 using FModel.Views.Resources.Controls;
 using FModel.Views.Snooper;
-
 using Newtonsoft.Json;
-
 using Ookii.Dialogs.Wpf;
-
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-
 using Serilog;
-
 using SkiaSharp;
-
 using UE4Config.Parsing;
-
 using Application = System.Windows.Application;
 
 namespace FModel.ViewModels;
@@ -189,8 +180,12 @@ public class CUE4ParseViewModel : ViewModel
         Provider.ReadScriptData = UserSettings.Default.ReadScriptData;
         Provider.CustomEncryption = Provider.Versions.Game switch
         {
+            EGame.GAME_MarvelRivals => MarvelAes.MarvelDecrypt,
             EGame.GAME_Undawn => ToaaAes.ToaaDecrypt,
-            EGame.GAME_DeadbyDaylight => DbDAes.DbDDecrypt,
+            EGame.GAME_DeadByDaylight => DBDAes.DbDDecrypt,
+            EGame.GAME_PaxDei => PaxDeiAes.PaxDeiDecrypt,
+            EGame.GAME_3on3FreeStyleRebound => FreeStyleReboundAes.FSRDecrypt,
+            EGame.GAME_DreamStar => DreamStarAes.DreamStarDecrypt,
             _ => Provider.CustomEncryption
         };
 
@@ -613,23 +608,13 @@ public class CUE4ParseViewModel : ViewModel
         var fileName = fullPath.SubstringAfterLast('/');
         var ext = fullPath.SubstringAfterLast('.').ToLower();
 
-        if (addNewTab && TabControl.CanAddTabs)
-        {
-            TabControl.AddTab(fileName, directory);
-        }
-        else
-        {
-            TabControl.SelectedTab.Header = fileName;
-            TabControl.SelectedTab.Directory = directory;
-        }
+        if (addNewTab && TabControl.CanAddTabs) TabControl.AddTab(fileName, directory);
+        else TabControl.SelectedTab.SoftReset(fileName, directory);
+        TabControl.SelectedTab.Highlighter = AvalonExtensions.HighlighterSelector(ext);
 
         var updateUi = !HasFlag(bulk, EBulkType.Auto);
         var saveProperties = HasFlag(bulk, EBulkType.Properties);
         var saveTextures = HasFlag(bulk, EBulkType.Textures);
-        TabControl.SelectedTab.ClearImages();
-        TabControl.SelectedTab.ResetDocumentText();
-        TabControl.SelectedTab.ScrollTrigger = null;
-        TabControl.SelectedTab.Highlighter = AvalonExtensions.HighlighterSelector(ext);
         switch (ext)
         {
             case "uasset":
@@ -670,6 +655,7 @@ public class CUE4ParseViewModel : ViewModel
             case "csv":
             case "pem":
             case "tps":
+            case "lua":
             case "js":
             case "po":
             case "h":
@@ -804,10 +790,10 @@ public class CUE4ParseViewModel : ViewModel
         }
     }
 
-    public void ExtractAndScroll(CancellationToken cancellationToken, string fullPath, string objectName)
+    public void ExtractAndScroll(CancellationToken cancellationToken, string fullPath, string objectName, string parentExportType)
     {
         Log.Information("User CTRL-CLICKED to extract '{FullPath}'", fullPath);
-        TabControl.AddTab(fullPath.SubstringAfterLast('/'), fullPath.SubstringBeforeLast('/'));
+        TabControl.AddTab(fullPath.SubstringAfterLast('/'), fullPath.SubstringBeforeLast('/'), parentExportType);
         TabControl.SelectedTab.ScrollTrigger = objectName;
 
         var exports = Provider.LoadAllObjects(fullPath);
@@ -858,6 +844,13 @@ public class CUE4ParseViewModel : ViewModel
                 return false;
             }
             case UWorld when isNone && UserSettings.Default.PreviewWorlds:
+            case UBlueprintGeneratedClass when isNone && UserSettings.Default.PreviewWorlds && TabControl.SelectedTab.ParentExportType switch
+            {
+                "JunoBuildInstructionsItemDefinition" => true,
+                "JunoBuildingSetAccountItemDefinition" => true,
+                "JunoBuildingPropAccountItemDefinition" => true,
+                _ => false
+            }:
             case UStaticMesh when isNone && UserSettings.Default.PreviewStaticMeshes:
             case USkeletalMesh when isNone && UserSettings.Default.PreviewSkeletalMeshes:
             case USkeleton when isNone && UserSettings.Default.SaveSkeletonAsMesh:

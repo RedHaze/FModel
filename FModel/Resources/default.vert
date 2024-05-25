@@ -77,6 +77,9 @@ void main()
                 finalTangent += inverseBoneMatrix * bindTangent * weight;
             }
         }
+        finalPos = normalize(finalPos);
+        finalNormal = normalize(finalNormal);
+        finalTangent = normalize(finalTangent);
     }
     else
     {
@@ -92,5 +95,5 @@ void main()
     fTangent = vec3(transpose(inverse(vInstanceMatrix)) * finalTangent);
     fTexCoords = vTexCoords;
     fTexLayer = vTexLayer;
-    fColor = unpackARGB(int(vColor));
+    fColor = unpackARGB(int(vColor)) / 255.0;
 }
