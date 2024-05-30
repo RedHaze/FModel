@@ -29,6 +29,7 @@ public partial class MainWindow
     public MainWindow()
     {
         CommandBindings.Add(new CommandBinding(new RoutedCommand("ReloadMappings", typeof(MainWindow), new InputGestureCollection { new KeyGesture(Key.F12) }), OnMappingsReload));
+        CommandBindings.Add(new CommandBinding(new RoutedCommand("ReloadDebug", typeof(MainWindow), new InputGestureCollection { new KeyGesture(Key.F11) }), OnDebugReload));
         CommandBindings.Add(new CommandBinding(ApplicationCommands.Find, (_, _) => OnOpenAvalonFinder()));
 
         DataContext = _applicationView;
@@ -94,13 +95,13 @@ public partial class MainWindow
                 "FortniteGame/Content/ArtTools/Pose_Asset_Remaps/ARKit_Remap_PoseAsset.uasset"));*/
 
 
-        
+        /*
         await _threadWorkerView.Begin(cancellationToken =>
             _applicationView.CUE4Parse.Extract(cancellationToken,
                 "FortniteGame/Content/Characters/Player/Male/Medium/Heads/M_MED_Jonesy3L_Head/Meshes/M_MED_Jonesy3L_Head.uasset"));
-        
+        */
 
-        /*
+        
         await _threadWorkerView.Begin(cancellationToken =>
             _applicationView.CUE4Parse.Extract(cancellationToken,
                 "FortniteGame/Content/Characters/Player/Common/Fortnite_Base_Head/Facials/CurveMappings/FN_LegacyTo3L_Main_Mapping.uasset"));
@@ -108,7 +109,7 @@ public partial class MainWindow
         await _threadWorkerView.Begin(cancellationToken =>
             _applicationView.CUE4Parse.Extract(cancellationToken,
                 "FortniteGame/Content/Characters/Player/Common/Fortnite_Base_Head/Facials/CurveMappings/FN_3LToLegacy_Main_Mapping.uasset"));
-        */
+        
 
         /*
         await _threadWorkerView.Begin(cancellationToken =>
@@ -179,6 +180,13 @@ public partial class MainWindow
     private async void OnMappingsReload(object sender, ExecutedRoutedEventArgs e)
     {
         await _applicationView.CUE4Parse.InitMappings(true);
+    }
+
+    private async void OnDebugReload(object sender, ExecutedRoutedEventArgs e)
+    {
+        await _threadWorkerView.Begin(cancellationToken =>
+            _applicationView.CUE4Parse.Extract(cancellationToken,
+                "FortniteGame/Content/Characters/Player/Male/Medium/Heads/M_MED_Jonesy3L_Head/Meshes/M_MED_Jonesy3L_Head.uasset"));
     }
 
     private void OnOpenAvalonFinder()
